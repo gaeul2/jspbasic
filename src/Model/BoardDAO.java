@@ -156,4 +156,37 @@ public class BoardDAO {
         }
         return bean;
     }
+    
+    public void createReWrite(BoardBean boardbean) {
+        int ref = boardbean.getRef();
+        int re_step = boardbean.getRe_step();
+        int re_level = boardbean.getRe_level();
+        
+        getCon();
+        try{
+//            부모글보다 큰 re_level의 값을 전부 1씩 증가시켜줌
+            String levelsql = "UPDATE board SET re_level = re_level + 1 WHERE ref=? and re_level > ?";
+            pstmt = con.prepareStatement(levelsql);
+            pstmt.setInt(1, ref);
+            pstmt.setInt(2, re_level);
+            pstmt.executeUpdate();
+            
+            String reWriteCreateSql = "INSERT INTO board VALUES (board_seq.NEXTVAL,?,?,?,?,sysdate,?,?,?,0,?)";
+            pstmt = con.prepareStatement(reWriteCreateSql);
+            pstmt.setString(1, boardbean.getWriter());
+            pstmt.setString(2, boardbean.getEmail());
+            pstmt.setString(3, boardbean.getSubject());
+            pstmt.setString(4, boardbean.getPassword());
+            pstmt.setInt(5, ref);
+            pstmt.setInt(6,re_step + 1); //답글이어서 부모글 re_step에 1더해준대
+            pstmt.setInt(7,re_level + 1); //답글이어서 부모글 re_level에 1더해준대
+            pstmt.setString(8, boardbean.getContent());
+            pstmt.executeUpdate();
+            
+            con.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        
+    }
 }

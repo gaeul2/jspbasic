@@ -43,7 +43,13 @@
 <%--			여기서 bean.getNum()하면 번호가 꼬임. 그냥 게시글 숫자용이므로 i+1로 하자!--%>
 			<td width = "50" align ="center"><%= i+1 %></td>
 			<td width = "320" align ="left">
-				<a href= "BoardInfo.jsp?num=<%= bean.getNum() %>" style ="text-decoration:none;"><%= bean.getSubject() %></a>
+				<a href= "BoardInfo.jsp?num=<%= bean.getNum() %>" style ="text-decoration:none;">
+					<%
+						if(bean.getRe_step() > 1){
+							for(int j =0; j< (bean.getRe_step()-1)* 5;j++){
+					%>&nbsp;
+						<%	}
+						}%><%= bean.getSubject() %></a>
 			</td>
 			<td width = "100" align ="center"><%= bean.getWriter() %></td>
 			<td width = "150" align ="center"><%= bean.getReg_date() %></td>
